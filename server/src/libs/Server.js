@@ -25,10 +25,10 @@ export default class Server {
         });
     
         // catch 404 and forward to error handler
-        this.app.use(notFoundRoute);
+        // this.app.use(notFoundRoute);
     
         // error handler, send stacktrace only during development
-        this.app.use(errorHandlerRoute);
+        // this.app.use(errorHandlerRoute);
     }
 
     async setupApollo(data) {
@@ -43,7 +43,7 @@ export default class Server {
         const serverr = this.app.listen(port, () => {
             console.info(`server started on port ${port}`);
         });
-        //   this.server.installSubscriptionHandlers(serverr);
+          this.server.installSubscriptionHandlers(serverr);
         return this;
     }
 }
