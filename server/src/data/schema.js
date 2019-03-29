@@ -3,7 +3,7 @@ type User {
     id: String!,
     name: String!,
     email: String!,
-    friends: [ID]
+    friends: [String]
 }
 type Message {
     text: String!
@@ -12,12 +12,15 @@ type Message {
 }
 type Query{
     users: [User]
-    messages: [Message] 
+    messages:[Message]
     user(id: ID!): User
-    friends(id: ID!): [String]!
+    friends(name: String!, email: String!): [String]
 }
 type Mutation{
     sendMessage(text: String!, from: String!, to: String!): Message
+}
+type Subscription{
+    messageSent: Message
 }
 `
 export default typeDefs;

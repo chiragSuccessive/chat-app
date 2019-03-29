@@ -1,7 +1,6 @@
 import React from 'react';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from "apollo-boost";
-import Users from './Users';
 import {
   BrowserRouter as Router,
   Route,
@@ -9,26 +8,32 @@ import {
   Switch,
 } from 'react-router-dom';
 import MainRoute from './MainRoute';
+import Chat from './Chat';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+// const client = new ApolloClient({
+//   uri: "http://localhost:4000/graphql"
+// });
 
+// const cache = new InMemoryCache();
+// const link = new HttpLink({
+//   uri: 'http://localhost:4000/graphql'
+// })
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql"
-});
+  uri: 'http://localhost:4000/graphql'
+})
 
-
-const App = () => (
-  <MainRoute/>
-
-  // <ApolloProvider client={client}>
-  // <Router>
-  //   <Route>
-  //     <Users />
-  //     <Switch>
-  //       <MainRoute/>
-  //     </Switch>
-  //   </Route>
-  // </Router>
-  //   <MainRoute/>
-  // </ApolloProvider>
-);
+const App = () => {
+  return (
+    <ApolloProvider client={client}>
+    <Router>
+        <Switch>
+          <Route exact path="/" component={MainRoute} />
+          <Route exact path="/:from/:to" component={Chat} />
+        </Switch>
+    </Router>
+    </ApolloProvider>
+  );
+}
 
 export default App;

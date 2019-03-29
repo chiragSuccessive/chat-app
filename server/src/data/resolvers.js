@@ -5,19 +5,32 @@ const resolvers = {
         users: () => users,
         user: (root, {id}) => users.find( user => user.id == id) ,
         messages: () => messages,
-        friends: (root, {id}) => {
-            console.log(':::::::::::::::::', user(id));
-            const user = users.find( user => user.id == id);
-            const friends = user
-            return user(id);
+        friends: (root, {name, email}) => {
+            const user = users.find( user => user.name == name && user.email == email);
+            const friendsName = [];
+            user.friends.forEach(id => {
+                users.forEach(user => {
+                    if(user.id === id ) {
+                        friendsName.push(user.name);
+                    }
+                });
+            });
+            return friendsName;
         }
     },
     Mutation: {
         sendMessage (root, { text, from, to }, { pubsub }) {
             const new_message = { id: messages.length + 1, text, from, to };
             messages.push(new_message);
-            // pubsub.publish('CHAT_CHANNEL', { messageSent: new_message });            
+            pubsub.publish('messageChannel', { messageSent: new_message });            
             return new_message;
+        }
+    },
+    Subscription: {
+        messageSent: {
+            subscribe: (root, args, { pubsub }) => {
+                return pubsub.asyncIterator('messageChannel');
+            }
         }
     }
 }

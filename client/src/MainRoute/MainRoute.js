@@ -4,13 +4,16 @@ import Email from '@material-ui/icons/Email';
 import Person from '@material-ui/icons/Person';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
+import Friends from '../Friends';
 
 class MainRoute extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            email: ''
+            email: '',
+            OpenFriendsDialog: false,
+            // openChatDialog: false,
         }
     }
 
@@ -19,10 +22,32 @@ class MainRoute extends Component {
         this.setState({ [item]: event.target.value });
     };
 
+    handleSubmit = (event) => {
+        event.preventDefault();
+        this.setState({OpenFriendsDialog: true});
+    }
+
+    handleFriendsDialogClose = (event, to) => {
+        event.preventDefault();
+        const {name} = this.state;
+        this.setState({OpenFriendsDialog: false});
+        this.props.history.push(`/${name}/${to}`)
+    } 
+
     render() {
-        const { name, email } = this.state;
+        const { name, email, OpenFriendsDialog } = this.state;
         return(
-            <> 
+            <>
+            {
+                (OpenFriendsDialog) 
+                ?
+                <Friends open = {OpenFriendsDialog} close={this.handleFriendsDialogClose} 
+                    name={name}
+                    email={email}
+                />
+                :
+                ''
+            }
             <TextField
             label="Name"
             value={name}
@@ -65,10 +90,10 @@ class MainRoute extends Component {
             fullWidth
             variant="contained"
             color="primary"
-            // onClick={event => this.handleSignIn(event, value)}
+            onClick={event => this.handleSubmit(event)}
             >
-            submit
-            </Button>
+            Submit
+        </Button>
             </>
         );
     }

@@ -43,7 +43,7 @@ export default class Server {
         const serverr = this.app.listen(port, () => {
             console.info(`server started on port ${port}`);
         });
-          this.server.installSubscriptionHandlers(serverr);
+        this.server.installSubscriptionHandlers(serverr);
         return this;
     }
 }
