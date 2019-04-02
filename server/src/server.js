@@ -1,7 +1,6 @@
 import Server from './libs/Server';
 import configuration from './config/configuration';
 import { typeDefs, resolvers } from './data';
-import { makeExecutableSchema } from 'apollo-server';
 import {PubSub} from 'apollo-server';
 
 const server = new Server(configuration);

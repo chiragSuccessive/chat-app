@@ -3,6 +3,9 @@ import { TextField, InputAdornment, IconButton } from "@material-ui/core";
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Send from "@material-ui/icons/Send";
+import MessageList from '../MessageList';
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
 
 class Chat extends Component {
   constructor(props) {
@@ -32,6 +35,11 @@ class Chat extends Component {
     const { text } = this.state;
     return (
         <>
+      <AppBar position="static">
+          <Typography variant="h6" color="inherit">
+          {to}
+          </Typography>   
+      </AppBar>
       <Query
         query={gql`
         {
@@ -43,39 +51,13 @@ class Chat extends Component {
         }
         `}
       >
-        {({ loading, error, data }) => {
+        {({ loading, error, data, subscribeToMore }) => {
+          if (!data) {
+          return null;
+        }
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :</p>;
-          return data.messages.map(message => {
-            if (message) {
-                if (message.to === to && message.from === from) {
-                    return (
-                        <div style={{textAlign:"end"}}>
-                            <TextField
-                                value={message.text}
-                                label={from}
-                                margin="normal"
-                                variant="outlined"
-                                readOnly
-                            />
-                        </div>
-                    );
-                }
-                if (message.to === from && message.from === to) {
-                    return (
-                        <div>
-                            <TextField
-                                value={message.text}
-                                label={to}
-                                margin="normal"
-                                variant="outlined"
-                                readOnly
-                            />
-                        </div>
-                    );
-                }
-            }
-          });
+          return <MessageList messages = {data.messages} from={from} to={to} subscribeToMore={subscribeToMore} />
         }}
       </Query>
       <Mutation

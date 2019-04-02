@@ -1,4 +1,5 @@
 import { users, messages } from './constants/constants';
+const MESSAGECHANNEL = 'messageChannel';
 
 const resolvers = {
     Query: {
@@ -22,14 +23,14 @@ const resolvers = {
         sendMessage (root, { text, from, to }, { pubsub }) {
             const new_message = { id: messages.length + 1, text, from, to };
             messages.push(new_message);
-            pubsub.publish('messageChannel', { messageSent: new_message });            
+            pubsub.publish(MESSAGECHANNEL, { messageSent: new_message });            
             return new_message;
         }
     },
     Subscription: {
         messageSent: {
             subscribe: (root, args, { pubsub }) => {
-                return pubsub.asyncIterator('messageChannel');
+                return pubsub.asyncIterator([MESSAGECHANNEL]);
             }
         }
     }
